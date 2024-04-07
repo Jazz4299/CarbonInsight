@@ -1,0 +1,14 @@
+{
+	"name": "emissionsadls",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://carbonemissionadls.dfs.core.windows.net/",
+			"credential": {
+				"referenceName": "Emissions-MUI",
+				"type": "CredentialReference"
+			}
+		}
+	}
+}
