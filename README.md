@@ -10,7 +10,7 @@ The agricultural sector contributes to almost 62% of the total global Co2 emissi
 
 ## Proposed Architecture
 The source data will reside in the Azure blob storage where every time a new source file is added, the Azure Data Factory pipeline will ingest into our raw container which is Azure Data Lake Storage Gen 2 (there would be an event trigger set on the pipeline). After the data is present in the raw container, we would be using Data Flows to make basic transformations as the data source does not require a lot of complex transformations and proceed to store it in our gold layer which is also a ADLS Gen 2, after which we will make the cleaned data available for visualization at Power BI. Below is the architecture diagram of the proposed solution!
-[solution](misc\Architecture Diagram.png)
+![Diagram](misc/ArchitectureDiagram.png)
 
 
 ## Appendix
