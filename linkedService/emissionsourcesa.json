@@ -1,11 +1,6 @@
 {
 	"name": "emissionsourcesa",
 	"properties": {
-		"parameters": {
-			"FileName": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"type": "AzureBlobStorage",
 		"typeProperties": {
