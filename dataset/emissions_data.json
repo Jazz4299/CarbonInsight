@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Agrofood_co2_emission.csv",
 				"container": "emissions"
 			},
 			"columnDelimiter": ",",

@@ -1,20 +1,17 @@
 {
-	"name": "emissions_raw",
+	"name": "emission_dynamic_data",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "emissionsadls",
+			"referenceName": "emissionsourcesa",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@concat('emissions_raw_', string(utcnow()))\r\n",
-					"type": "Expression"
-				},
-				"fileSystem": "raw"
+				"type": "AzureBlobStorageLocation",
+				"fileName": "@dataset().FileName",
+				"container": "emissions"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
