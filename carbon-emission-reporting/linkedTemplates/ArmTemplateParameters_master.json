@@ -11,6 +11,9 @@
 		"emissionsourcesa_properties_typeProperties_serviceEndpoint": {
 			"value": "https://carbonemissionsa.blob.core.windows.net/"
 		},
+		"Event Trigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/8a19f03e-3561-45b6-b688-5b309ccd3cd2/resourceGroups/CarbonEmission/providers/Microsoft.Storage/storageAccounts/carbonemissionsa"
+		},
 		"containerUri": {
 			"value": ""
 		},
