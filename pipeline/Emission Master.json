@@ -34,6 +34,10 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Emission Raw to Gold",
+						"type": "PipelineReference"
+					},
 					"waitOnCompletion": true
 				}
 			}
