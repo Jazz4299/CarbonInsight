@@ -17,6 +17,25 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "Ingest from Raw to Gold",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Source Ingestion",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"annotations": []
