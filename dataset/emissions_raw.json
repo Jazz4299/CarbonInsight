@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "emissions_raw",
+					"value": "@concat('emissions_raw_', utcnow())",
 					"type": "Expression"
 				},
 				"fileSystem": "raw"
