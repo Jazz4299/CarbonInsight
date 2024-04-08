@@ -19,7 +19,7 @@
 				}
 			},
 			{
-				"name": "Ingest from Raw to Gold",
+				"name": "Ingest from Raw to Silver",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
@@ -35,7 +35,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "Emission Raw to Gold",
+						"referenceName": "Emission Raw to Silver",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
