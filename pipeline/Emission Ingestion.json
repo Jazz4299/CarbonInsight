@@ -155,7 +155,7 @@
 				}
 			},
 			{
-				"name": "Column Count Check",
+				"name": "Column Count Validation",
 				"type": "IfCondition",
 				"dependsOn": [
 					{
