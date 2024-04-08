@@ -8,7 +8,7 @@
 		"parameters": {
 			"FileName": {
 				"type": "string",
-				"defaultValue": "Agrofood_co2_emission"
+				"defaultValue": "Agrofood_co2_emission.csv"
 			}
 		},
 		"annotations": [],
