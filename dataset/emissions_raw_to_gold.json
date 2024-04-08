@@ -1,5 +1,5 @@
 {
-	"name": "RawtoGold",
+	"name": "emissions_raw_to_gold",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "emissionsadls",
