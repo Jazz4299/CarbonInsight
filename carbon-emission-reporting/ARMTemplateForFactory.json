@@ -179,6 +179,30 @@
 											}
 										]
 									}
+								},
+								{
+									"name": "Set variable1",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Compare the dates",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "PreviousModifiedDate",
+										"value": {
+											"value": "@activity('Get File Information').output.lastModified",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
