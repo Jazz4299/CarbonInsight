@@ -171,6 +171,18 @@
 						"value": "@equals(variables('ColumnCount'), 31)",
 						"type": "Expression"
 					},
+					"ifFalseActivities": [
+						{
+							"name": "Validation Failed",
+							"type": "Fail",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"message": "There was a column mismatch",
+								"errorCode": "500"
+							}
+						}
+					],
 					"ifTrueActivities": [
 						{
 							"name": "Copy Emissions Data",
