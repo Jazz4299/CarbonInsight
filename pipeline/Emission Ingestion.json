@@ -3,34 +3,9 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Check if file exists",
-				"type": "Validation",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "emissions_data",
-						"type": "DatasetReference"
-					},
-					"timeout": "0.00:01:00",
-					"sleep": 10
-				}
-			},
-			{
-				"name": "Get File Metadata",
+				"name": "Get Files Metadata",
 				"type": "GetMetadata",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [
-					{
-						"activity": "Check if file exists",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -45,10 +20,11 @@
 						"type": "DatasetReference"
 					},
 					"fieldList": [
-						"exists"
+						"childItems"
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -57,13 +33,133 @@
 				}
 			},
 			{
-				"name": "If Column count matches",
-				"type": "IfCondition",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
+				"name": "Iterate through the Metadata",
+				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Get File Metadata",
+						"activity": "Get Files Metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Files Metadata').output.childItems",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Get File Information",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "emission_dynamic_data",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								},
+								"fieldList": [
+									"itemName",
+									"lastModified",
+									"columnCount"
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							}
+						},
+						{
+							"name": "Compare the dates",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Get File Information",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@greater(formatDateTime(activity('Get File Information').output.lastModified, 'yyyyMMddHHmmss'),\nformatDateTime(variables('PreviousModifiedDate'), 'yyyyMMddHHmmss'))",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Set FileName",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "LatestFileName",
+											"value": {
+												"value": "@activity('Get File Information').output.itemName",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set Column Count",
+										"type": "SetVariable",
+										"dependsOn": [
+											{
+												"activity": "Set FileName",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "ColumnCount",
+											"value": {
+												"value": "@activity('Get File Information').output.columnCount",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Column Count Check",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Iterate through the Metadata",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -72,7 +168,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(activity('Get File Metadata').output.columnCount, 31)",
+						"value": "@equals(variables('ColumnCount'), 31)",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
@@ -123,8 +219,14 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "emissions_data",
-									"type": "DatasetReference"
+									"referenceName": "emission_dynamic_data",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "@variables('LatestFileName')",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
@@ -136,88 +238,21 @@
 						}
 					]
 				}
-			},
-			{
-				"name": "Get Files Metadata",
-				"type": "GetMetadata",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "emissions_data",
-						"type": "DatasetReference"
-					},
-					"fieldList": [
-						"childItems"
-					],
-					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
-						"enablePartitionDiscovery": false
-					},
-					"formatSettings": {
-						"type": "DelimitedTextReadSettings"
-					}
-				}
-			},
-			{
-				"name": "ForEach1",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "Get Files Metadata",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Get Files Metadata').output.childItems",
-						"type": "Expression"
-					},
-					"isSequential": true,
-					"activities": [
-						{
-							"name": "Get Metadata1",
-							"type": "GetMetadata",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"dataset": {
-									"referenceName": "emission_dynamic_data",
-									"type": "DatasetReference"
-								},
-								"fieldList": [
-									"columnCount"
-								],
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							}
-						}
-					]
-				}
 			}
 		],
+		"variables": {
+			"LatestFileName": {
+				"type": "String"
+			},
+			"PreviousModifiedDate": {
+				"type": "String",
+				"defaultValue": "1990-01-01T05:12:22Z"
+			},
+			"ColumnCount": {
+				"type": "Integer",
+				"defaultValue": 31
+			}
+		},
 		"annotations": []
 	}
 }
