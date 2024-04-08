@@ -110,6 +110,7 @@
 				"          total_emission as string,",
 				"          {Average Temperature °C} as string",
 				"     ),",
+				"     partitionFileNames:[''],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
@@ -147,7 +148,8 @@
 				"          tot_pop_f = {Total Population - Female},",
 				"          tot_emission = total_emission,",
 				"          avg_temp = {Average Temperature °C}",
-				"     )) ~> sink1"
+				"     ),",
+				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
 	}
