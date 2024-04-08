@@ -6,7 +6,7 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "Emission Ingestion",
+					"referenceName": "Emission Master",
 					"type": "PipelineReference"
 				}
 			}
