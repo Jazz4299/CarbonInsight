@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "emissions_gold_layer",
+						"referenceName": "emissions_silver_layer",
 						"type": "DatasetReference"
 					},
 					"name": "EmissionsDataset"
@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "emission_gold_final_dataset",
+						"referenceName": "emissions_gold_layer",
 						"type": "DatasetReference"
 					},
 					"name": "sink1",
@@ -67,7 +67,7 @@
 				"          total_emission as double,",
 				"          {Average Temperature °C} as double",
 				"     ),",
-				"     allowSchemaDrift: false,",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> EmissionsDataset",
 				"EmissionsDataset window(over(Area,",
@@ -77,6 +77,39 @@
 				"Rankingtoremoveduplicates filter(RNK==1) ~> RemoveDuplicates",
 				"RemoveDuplicates sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          Area as string,",
+				"          Year as string,",
+				"          {Savanna fires} as string,",
+				"          {Forest fires} as string,",
+				"          {Crop Residues} as string,",
+				"          {Rice Cultivation} as string,",
+				"          {Drained organic soils (CO2)} as string,",
+				"          {Pesticides Manufacturing} as string,",
+				"          {Food Transport} as string,",
+				"          Forestland as string,",
+				"          {Net Forest conversion} as string,",
+				"          {Food Household Consumption} as string,",
+				"          {Food Retail} as string,",
+				"          {On-farm Electricity Use} as string,",
+				"          {Food Packaging} as string,",
+				"          {Agrifood Systems Waste Disposal} as string,",
+				"          {Food Processing} as string,",
+				"          {Fertilizers Manufacturing} as string,",
+				"          IPPU as string,",
+				"          {Manure applied to Soils} as string,",
+				"          {Manure left on Pasture} as string,",
+				"          {Manure Management} as string,",
+				"          {Fires in organic soils} as string,",
+				"          {Fires in humid tropical forests} as string,",
+				"          {On-farm energy use} as string,",
+				"          {Rural population} as string,",
+				"          {Urban population} as string,",
+				"          {Total Population - Male} as string,",
+				"          {Total Population - Female} as string,",
+				"          total_emission as string,",
+				"          {Average Temperature °C} as string",
+				"     ),",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
