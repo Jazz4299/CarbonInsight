@@ -110,7 +110,7 @@
 				"          total_emission as string,",
 				"          {Average Temperature °C} as string",
 				"     ),",
-				"     partitionFileNames:[''],",
+				"     partitionFileNames:['sourcepbi.csv'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
